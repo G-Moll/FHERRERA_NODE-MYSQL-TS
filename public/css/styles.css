@@ -1,0 +1,23 @@
+* {
+    font-family: Arial;
+    font-weight: normal;
+}
+
+body {
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.warning {
+    background-color: crimson;
+    color: white;
+    text-transform: uppercase;
+    padding: 40px;
+    border-radius: 8px;
+}
