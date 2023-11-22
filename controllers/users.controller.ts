@@ -24,23 +24,61 @@ export const getUser = async( req: Request, res: Response ) => {
     }
 }
 
-export const postUser = ( req: Request, res: Response ) => {
+export const postUser = async( req: Request, res: Response ) => {
     const { body } = req;
 
-    res.json({
-        msg: 'postUser',
-        body: body
-    });
+    try {
+        const emailExists = await User.findOne({
+            where: {
+                email: body.email
+            }
+        });
+
+        if( emailExists ) {
+            res.status( 400 ).json({
+                msg: `User with email ${ body.id } already exists...`
+            });
+        }
+        else {
+            // const user = new User( body );
+            // await user.save();
+            const user = await User.create( body );
+            res.json({
+                user: user
+            });
+        }
+    }
+    catch( e: any ) {
+        res.status( 500 ).json({
+            msg: 'New user can not be created...'
+        });
+    }
 }
 
-export const putUser = ( req: Request, res: Response ) => {
+export const putUser = async( req: Request, res: Response ) => {
     const { id } = req.params;
     const { body } = req;
 
-    res.json({
-        msg: 'putUser',
-        body: body
-    });
+    try {
+        const user = await User.findByPk( id );
+
+        if( !user ) {
+            res.status( 404 ).json({
+                msg: `User with id ${ id } doesn't exists...`
+            });
+        }
+        else {
+            await user.update( body );
+            res.json({
+                user: user
+            });
+        }
+    }
+    catch( e: any ) {
+        res.status( 500 ).json({
+            msg: `User can not be updated - ${ e }`
+        });
+    }
 }
 
 export const deleteUser = ( req: Request, res: Response ) => {
